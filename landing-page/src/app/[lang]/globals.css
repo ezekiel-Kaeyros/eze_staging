@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+  /* overflow-y: hidden; */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* overflow-y: hidden; */
+  margin: 0;
+  background-color: white;
+  overflow-x: hidden;
+}
+
+.slick-dots .slick-active div div {
+  background-color: #015e44;
+}

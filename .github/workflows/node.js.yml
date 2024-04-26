@@ -1,31 +1,59 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js CI
+name: CI Pipeline
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
+    branches:
+      - main 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: create env file
+        run: |
+          cd communities/packages/api && \
+          touch .env && \
+          echo "API_PORT=4000" > .env && \
+          echo "API_URL=https://backcommunities.eze.ink" >> .env && \
+          echo "NODE_ENV=production" >> .env && \
+          echo "SECRET=WriteYourSecret" >> .env && \
+          echo "FRONTEND_URL=https://communities.eze.ink" >> .env && \
+          echo "MONGO_URL=mongodb+srv://eze:nMWN2NG50nSLJrOC@eze-communities.ufwbl4d.mongodb.net/?retryWrites=true&w=majority" >> .env && \
+          echo "CLOUDINARY_CLOUD_NAME=dyekwrvwe" >> .env && \
+          echo "CLOUDINARY_API_KEY=981519692274267" >> .env && \
+          echo "CLOUDINARY_SECRET=EnwDIzzscMxY5SacVWoqUXE0mzw" >> .env && \
+          echo "MAILGUN_API_KEY=YOUR_MAILGUN_API_KEY" >> .env && \
+          echo "MAILGUN_DOMAIN=YOUR_MAILGUN_DOMAIN" >> .env
+
+      - name: create env file landing page 
+        run: |
+          cd landing-page && \
+          touch .env && \
+          echo "REACT_APP_API_URL=https://backcommunities.eze.ink" > .env
+
+      - name: Build Docker image
+        run: docker-compose build
+
+      - name: Tag Docker image
+        run: docker tag frontend_communities ezekielkaeyros/frontend_eze_staging
+
+      - name: Tag Docker image
+        run: docker tag backend_communities ezekielkaeyros/backend_communities_staging
+
+      - name: Tag Docker image
+        run: docker tag landing_communities ezekielkaeyros/eze_landing_staging
+
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Push Docker image
+        run: docker push ezekielkaeyros/frontend_eze_staging:latest
+
+      - name: Push Docker image
+        run: docker push ezekielkaeyros/backend_communities_staging:latest
+
+      - name: Push Docker image
+        run: docker push ezekielkaeyros/eze_landing_staging:latest
