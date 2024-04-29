@@ -17,7 +17,7 @@ type NavBarProps = {
   lang: string;
   navigation: any;
 };
-const COMMUNITIES_URL = 'https://communities.eze.wiki';
+const COMMUNITIES_URL = 'https://communities.eze.ink';
 
 const NavBar: React.FC<NavBarProps> = ({ lang, navigation }) => {
   const [toggleMenu, setToggleMenu] = useState<boolean>(false);
