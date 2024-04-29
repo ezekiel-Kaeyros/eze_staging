@@ -18,7 +18,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 import { getIsFirstTime } from '@/cookies/cookies';
 
-const COMMUNITIES_URL = 'https://communities.eze.ink/';
+const COMMUNITIES_URL = 'https://communities.eze.ink';
 
 const LoginForm:React.FC<{login:any}> = ({login}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
