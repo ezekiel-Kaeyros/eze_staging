@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-const API_URL = 'https://backcommunities.eze.wiki';
+// const API_URL = 'https://backcommunities.eze.wiki';
 //const API_URL = 'http://localhost:4000';
 
 export default class DataService {
   client: any;
   constructor() {
     this.client = axios.create({
-      baseURL: API_URL,
+      baseURL: process.env.API_URL,
       timeout: 30000,
       timeoutErrorMessage: 'Time out!',
       headers: {
