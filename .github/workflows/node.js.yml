@@ -11,15 +11,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: List directory content for debugging
+        run: ls -R
 
   create-env-file-api:
     runs-on: ubuntu-latest
     needs: checkout-repository
     steps:
+      - name: List directory content for debugging
+        run: ls -R
       - name: Create env file for API backend
         run: |
-          if [ -d "$GITHUB_WORKSPACE/communities/packages/api" ]; then
-            cd $GITHUB_WORKSPACE/communities/packages/api && \
+          if [ -d "./communities/packages/api" ]; then
+            cd communities/packages/api && \
             touch .env && \
             echo "API_PORT=4000" > .env && \
             echo "API_URL=https://backcommunities.eze.ink" >> .env && \
@@ -43,8 +47,8 @@ jobs:
     steps:
       - name: Create env file for landing page
         run: |
-          if [ -d "$GITHUB_WORKSPACE/landing-page" ]; then
-            cd $GITHUB_WORKSPACE/landing-page && \
+          if [ -d "./landing-page" ]; then
+            cd landing-page && \
             touch .env && \
             echo "REACT_APP_API_URL=https://backcommunities.eze.ink" > .env && \
             echo 'NEXT_PUBLIC_MAP_BASE_URL="https://back-end.kaeyros.shop"' >> .env && \
@@ -61,8 +65,8 @@ jobs:
     steps:
       - name: Create env file for communities frontend
         run: |
-          if [ -d "$GITHUB_WORKSPACE/communities/packages/frontend" ]; then
-            cd $GITHUB_WORKSPACE/communities/packages/frontend && \
+          if [ -d "./communities/packages/frontend" ]; then
+            cd communities/packages/frontend && \
             touch .env && \
             echo "NODE_ENV=http://localhost:4000" > .env && \
             echo "GOOGLE_ANALYTICS_ID=G-MD706N8TZV" >> .env && \
@@ -81,8 +85,8 @@ jobs:
     steps:
       - name: Create env file for SSO
         run: |
-          if [ -d "$GITHUB_WORKSPACE/sso/eze-auth0" ]; then
-            cd $GITHUB_WORKSPACE/sso/eze-auth0 && \
+          if [ -d "./sso/eze-auth0" ]; then
+            cd sso/eze-auth0 && \
             touch .env && \
             echo "MONGODB_URI=mongodb+srv://eze:mongodb123@cluster0.dbnvshu.mongodb.net/eze_sso?retryWrites=true&w=majority&appName=Cluster0" > .env && \
             echo "PORT=3000" >> .env && \
@@ -106,7 +110,7 @@ jobs:
     needs: login-dockerhub
     steps:
       - name: Build frontend Docker image
-        run: docker build -t ezekielkaeyros/frontend_eze_staging $GITHUB_WORKSPACE/communities
+        run: docker build -t ezekielkaeyros/frontend_eze_staging ./communities
       - name: Push frontend Docker image
         run: docker push ezekielkaeyros/frontend_eze_staging:latest
 
@@ -115,7 +119,7 @@ jobs:
     needs: login-dockerhub
     steps:
       - name: Build backend Docker image
-        run: docker build -t ezekielkaeyros/backend_communities_staging $GITHUB_WORKSPACE/communities/packages/api
+        run: docker build -t ezekielkaeyros/backend_communities_staging ./communities/packages/api
       - name: Push backend Docker image
         run: docker push ezekielkaeyros/backend_communities_staging:latest
 
@@ -124,7 +128,7 @@ jobs:
     needs: login-dockerhub
     steps:
       - name: Build landing Docker image
-        run: docker build -t ezekielkaeyros/eze_landing_staging $GITHUB_WORKSPACE/landing-page
+        run: docker build -t ezekielkaeyros/eze_landing_staging ./landing-page
       - name: Push landing Docker image
         run: docker push ezekielkaeyros/eze_landing_staging:latest
 
@@ -133,6 +137,6 @@ jobs:
     needs: login-dockerhub
     steps:
       - name: Build SSO image
-        run: docker build -t ezekielkaeyros/sso_staging $GITHUB_WORKSPACE/sso/eze-auth0
+        run: docker build -t ezekielkaeyros/sso_staging ./sso/eze-auth0
       - name: Push SSO image
         run: docker push ezekielkaeyros/sso_staging:latest
