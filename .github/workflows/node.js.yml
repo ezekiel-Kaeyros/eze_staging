@@ -3,7 +3,7 @@ name: Pipelines Staging
 on:
   push:
     branches:
-      - develop 
+      - main 
 
 jobs:
   checkout-repository:
