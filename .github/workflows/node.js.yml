@@ -3,7 +3,7 @@ name: Pipelines Staging
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   checkout-repository:
@@ -18,32 +18,42 @@ jobs:
     steps:
       - name: Create env file for API backend
         run: |
-          cd communities/packages/api && \
-          touch .env && \
-          echo "API_PORT=4000" > .env && \
-          echo "API_URL=https://backcommunities.eze.ink" >> .env && \
-          echo "NODE_ENV=production" >> .env && \
-          echo "SECRET=WriteYourSecret" >> .env && \
-          echo "FRONTEND_URL=https://communities.eze.ink" >> .env && \
-          echo "MONGO_URL=mongodb+srv://eze:nMWN2NG50nSLJrOC@eze-communities.ufwbl4d.mongodb.net/?retryWrites=true&w=majority" >> .env && \
-          echo "CLOUDINARY_CLOUD_NAME=dyekwrvwe" >> .env && \
-          echo "CLOUDINARY_API_KEY=981519692274267" >> .env && \
-          echo "CLOUDINARY_SECRET=EnwDIzzscMxY5SacVWoqUXE0mzw" >> .env && \
-          echo "MAILGUN_API_KEY=YOUR_MAILGUN_API_KEY" >> .env && \
-          echo "MAILGUN_DOMAIN=YOUR_MAILGUN_DOMAIN" >> .env
+          if [ -d "$GITHUB_WORKSPACE/communities/packages/api" ]; then
+            cd $GITHUB_WORKSPACE/communities/packages/api && \
+            touch .env && \
+            echo "API_PORT=4000" > .env && \
+            echo "API_URL=https://backcommunities.eze.ink" >> .env && \
+            echo "NODE_ENV=production" >> .env && \
+            echo "SECRET=WriteYourSecret" >> .env && \
+            echo "FRONTEND_URL=https://communities.eze.ink" >> .env && \
+            echo "MONGO_URL=mongodb+srv://eze:nMWN2NG50nSLJrOC@eze-communities.ufwbl4d.mongodb.net/?retryWrites=true&w=majority" >> .env && \
+            echo "CLOUDINARY_CLOUD_NAME=dyekwrvwe" >> .env && \
+            echo "CLOUDINARY_API_KEY=981519692274267" >> .env && \
+            echo "CLOUDINARY_SECRET=EnwDIzzscMxY5SacVWoqUXE0mzw" >> .env && \
+            echo "MAILGUN_API_KEY=YOUR_MAILGUN_API_KEY" >> .env && \
+            echo "MAILGUN_DOMAIN=YOUR_MAILGUN_DOMAIN" >> .env
+          else
+            echo "Directory communities/packages/api does not exist."
+            exit 1
+          fi
 
   create-env-file-landing-page:
     runs-on: ubuntu-latest
     needs: checkout-repository
     steps:
-      - name: Create env file for landing page 
+      - name: Create env file for landing page
         run: |
-          cd landing-page && \
-          touch .env && \
-          echo "REACT_APP_API_URL=https://backcommunities.eze.ink" > .env && \
-          echo 'NEXT_PUBLIC_MAP_BASE_URL="https://back-end.kaeyros.shop"' >> .env && \
-          echo 'NEXT_PUBLIC_COMMUNITIES_URL="https://communities.eze.ink/"' >> .env && \
-          echo 'NEXT_PUBLIC_SSO_LOGIN_URL="https://sso.eze.ink/auth/login"' >> .env
+          if [ -d "$GITHUB_WORKSPACE/landing-page" ]; then
+            cd $GITHUB_WORKSPACE/landing-page && \
+            touch .env && \
+            echo "REACT_APP_API_URL=https://backcommunities.eze.ink" > .env && \
+            echo 'NEXT_PUBLIC_MAP_BASE_URL="https://back-end.kaeyros.shop"' >> .env && \
+            echo 'NEXT_PUBLIC_COMMUNITIES_URL="https://communities.eze.ink/"' >> .env && \
+            echo 'NEXT_PUBLIC_SSO_LOGIN_URL="https://sso.eze.ink/auth/login"' >> .env
+          else
+            echo "Directory landing-page does not exist."
+            exit 1
+          fi
 
   create-env-file-communities-packages:
     runs-on: ubuntu-latest
@@ -51,14 +61,19 @@ jobs:
     steps:
       - name: Create env file for communities frontend
         run: |
-          cd communities/packages/frontend && \
-          touch .env && \
-          echo "NODE_ENV=http://localhost:4000" > .env && \
-          echo "GOOGLE_ANALYTICS_ID=G-MD706N8TZV" >> .env && \
-          echo "NEXT_API_PRODUCTION_URL=https://backcommunities.eze.ink" >> .env && \
-          echo "NEXT_PUBLIC_COMMUNITIES_URL=https://communities.eze.ink" >> .env && \
-          echo "NEXT_PUBLIC_SSO_LOGIN_URL=https://sso.eze.ink/auth/login" >> .env && \
-          echo "NEXT_PUBLIC_LANDINGPAGE_URL=https://eze.ink" >> .env
+          if [ -d "$GITHUB_WORKSPACE/communities/packages/frontend" ]; then
+            cd $GITHUB_WORKSPACE/communities/packages/frontend && \
+            touch .env && \
+            echo "NODE_ENV=http://localhost:4000" > .env && \
+            echo "GOOGLE_ANALYTICS_ID=G-MD706N8TZV" >> .env && \
+            echo "NEXT_API_PRODUCTION_URL=https://backcommunities.eze.ink" >> .env && \
+            echo "NEXT_PUBLIC_COMMUNITIES_URL=https://communities.eze.ink" >> .env && \
+            echo "NEXT_PUBLIC_SSO_LOGIN_URL=https://sso.eze.ink/auth/login" >> .env && \
+            echo "NEXT_PUBLIC_LANDINGPAGE_URL=https://eze.ink" >> .env
+          else
+            echo "Directory communities/packages/frontend does not exist."
+            exit 1
+          fi
 
   create-env-file-sso:
     runs-on: ubuntu-latest
@@ -66,13 +81,18 @@ jobs:
     steps:
       - name: Create env file for SSO
         run: |
-          cd sso/eze-auth0 && \
-          touch .env && \
-          echo "MONGODB_URI=mongodb+srv://eze:mongodb123@cluster0.dbnvshu.mongodb.net/eze_sso?retryWrites=true&w=majority&appName=Cluster0" > .env && \
-          echo "PORT=3000" >> .env && \
-          echo "SSO_URL=https://sso.eze.ink" >> .env && \
-          echo "REDIRECT_ORIGIN=https://eze.ink" >> .env && \
-          echo "CALLBACK_URL=https://sso.eze.ink/auth/login/callback" >> .env
+          if [ -d "$GITHUB_WORKSPACE/sso/eze-auth0" ]; then
+            cd $GITHUB_WORKSPACE/sso/eze-auth0 && \
+            touch .env && \
+            echo "MONGODB_URI=mongodb+srv://eze:mongodb123@cluster0.dbnvshu.mongodb.net/eze_sso?retryWrites=true&w=majority&appName=Cluster0" > .env && \
+            echo "PORT=3000" >> .env && \
+            echo "SSO_URL=https://sso.eze.ink" >> .env && \
+            echo "REDIRECT_ORIGIN=https://eze.ink" >> .env && \
+            echo "CALLBACK_URL=https://sso.eze.ink/auth/login/callback" >> .env
+          else
+            echo "Directory sso/eze-auth0 does not exist."
+            exit 1
+          fi
 
   login-dockerhub:
     runs-on: ubuntu-latest
@@ -86,7 +106,7 @@ jobs:
     needs: login-dockerhub
     steps:
       - name: Build frontend Docker image
-        run: docker build -t ezekielkaeyros/frontend_eze_staging ./communities
+        run: docker build -t ezekielkaeyros/frontend_eze_staging $GITHUB_WORKSPACE/communities
       - name: Push frontend Docker image
         run: docker push ezekielkaeyros/frontend_eze_staging:latest
 
@@ -95,7 +115,7 @@ jobs:
     needs: login-dockerhub
     steps:
       - name: Build backend Docker image
-        run: docker build -t ezekielkaeyros/backend_communities_staging ./communities/packages/api
+        run: docker build -t ezekielkaeyros/backend_communities_staging $GITHUB_WORKSPACE/communities/packages/api
       - name: Push backend Docker image
         run: docker push ezekielkaeyros/backend_communities_staging:latest
 
@@ -104,7 +124,7 @@ jobs:
     needs: login-dockerhub
     steps:
       - name: Build landing Docker image
-        run: docker build -t ezekielkaeyros/eze_landing_staging ./landing-page
+        run: docker build -t ezekielkaeyros/eze_landing_staging $GITHUB_WORKSPACE/landing-page
       - name: Push landing Docker image
         run: docker push ezekielkaeyros/eze_landing_staging:latest
 
@@ -113,6 +133,6 @@ jobs:
     needs: login-dockerhub
     steps:
       - name: Build SSO image
-        run: docker build -t ezekielkaeyros/sso_staging ./sso/eze-auth0
+        run: docker build -t ezekielkaeyros/sso_staging $GITHUB_WORKSPACE/sso/eze-auth0
       - name: Push SSO image
         run: docker push ezekielkaeyros/sso_staging:latest
