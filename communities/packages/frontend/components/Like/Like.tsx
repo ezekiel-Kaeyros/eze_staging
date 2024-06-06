@@ -33,13 +33,10 @@ interface LikeProps {
   hasLiked: any;
   queryKey: any;
   type?: string;
-  id?: any;
+  id?: string;
   islike?: string;
   likes?: any;
   likeHandler?: any;
-  likeHandler2?: any;
-  arrayLikes?: any
-  updateLikes?:any
 }
 
 const StyledButton = styled(Button)`
@@ -57,21 +54,16 @@ const Like: FC<LikeProps> = ({
   islike,
   likes,
   likeHandler,
-  likeHandler2,
-  arrayLikes,
-  updateLikes
 }) => {
-  const [isBlue,setIsBlue]=useState(id)
   const dispatch = useDispatch();
   const authUser = useSelector((state: RootState) => state.auth.user);
-  const color = hasLiked  ? 'primary' : 'textSecondary';
+  const color = hasLiked ? 'primary' : 'textSecondary';
   const queryClient = useQueryClient();
   const { createNotification, deleteNotification } = useNotifications();
   const [checkLike, setCheckLike] = useState('');
   const { mutateAsync: createLikeMutation } = useMutation(createLike);
   const { mutateAsync: createLikeCommentMutation } = useMutation(createLikeComment);
   const { mutateAsync: deleteLikeMutation } = useMutation(deleteLike);
-// console.log('hfgkhgnfhgnf hjgfhjg',id);
 
   const updateAfterLike = (like) => {
     if (!type) {
@@ -100,7 +92,7 @@ const Like: FC<LikeProps> = ({
         };
       });
     } else {
-      // alert('yes');
+      //  alert('yes')
 
       queryClient.setQueryData(queryKey, (existingPosts: any) => {
         if (!existingPosts.pages) {
@@ -157,9 +149,6 @@ const Like: FC<LikeProps> = ({
         };
       });
       setCheckLike('');
-      setIsBlue(true);
-      updateLikes(2);
-
     }
   };
 
@@ -190,22 +179,15 @@ const Like: FC<LikeProps> = ({
         };
       });
     } else {
-      // alert(likeId);
-
       queryClient.setQueryData(queryKey, (existingPosts: any) => {
-        // console.log('existingPosts',existingPosts);
-        
         if (!existingPosts.pages) {
-          const comments = existingPosts.comments.map((item: any) => {
+          const comments = existingPosts.comments.map((item) => {
             let row = item;
             if (item._id == checkLike) {
-              const arraylikes = item.likes.filter((items2: any) => items2 !== likeId);
-              delete item.likes;
               row = {
                 ...item,
-                likes: arraylikes,
+                likes: item.likes.filter((items2) => items2._id !== likeId),
               };
-              // console.log('row', row);
             }
             return row;
           });
@@ -223,13 +205,10 @@ const Like: FC<LikeProps> = ({
                 const comments = p.comments.map((item) => {
                   let row = item;
                   if (item._id == checkLike) {
-                    const arraylikes = item.likes.filter((items2: any) => items2 !== likeId);
-                    delete item.likes;
                     row = {
                       ...item,
-                      likes: arraylikes,
+                      likes: item.likes.filter((items2) => items2._id !== likeId),
                     };
-                    // console.log('row', row);
                   }
                   return row;
                 });
@@ -245,10 +224,6 @@ const Like: FC<LikeProps> = ({
           }),
         };
       });
-      setCheckLike('');
-      likeHandler2();
-      setIsBlue(false)
-      updateLikes(1)
     }
   };
 
@@ -277,17 +252,15 @@ const Like: FC<LikeProps> = ({
   };
 
   const likeCommentMutation = async () => {
-    // console.log('hasLiked12365', hasLiked);
-
     try {
       const like = hasLiked
-        ? await deleteLikeMutation(hasLiked?.id)
+        ? await deleteLikeMutation(hasLiked?._id)
         : await createLikeCommentMutation({ commentId: checkLike });
-      // console.log('like._id', like._id);
-      // console.log('hasLiked', hasLiked);
+      // console.log('like', like);
       // alert('ok')
-      // updateAfterUnLike(like._id);
-      hasLiked ? updateAfterUnLike(like._id) : updateAfterLike(like._id);
+
+      hasLiked ? updateAfterUnLike(like._id) : updateAfterLike(like);
+
       // if (hasLiked) {
       //   const notification = post.author.notifications.find((n) => n?.like?._id === hasLiked?._id);
       //   if (notification) {
@@ -310,17 +283,19 @@ const Like: FC<LikeProps> = ({
   useEffect(() => {
     //  alert(checkLike);
     if (islike) {
+     
       //  alert(islike);
 
       likeHandler();
-      setCheckLike(islike);
+      setCheckLike(islike)
     }
 
     if (checkLike !== '' && type) {
-      likeCommentMutation();
-      setCheckLike('');
+      // alert(checkLike)
+       likeCommentMutation();
+      setCheckLike('')
     }
-  }, [checkLike, type, islike]);
+  }, [checkLike,type,islike]);
 
   const openAuthModal = () => {
     dispatch(openAuthPopup(PopupType.Sign_Up));
@@ -357,7 +332,7 @@ const Like: FC<LikeProps> = ({
           {' '}
           {likes && (
             <div>
-              <LikeIcon color={color} hasLiked={isBlue} />
+              <LikeIcon color={color} hasLiked={hasLiked} />
             </div>
           )}
           {/* {withText && <Spacing left="xxs">Like</Spacing>} */}

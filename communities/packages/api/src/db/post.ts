@@ -13,7 +13,6 @@ export const postById = async (id: string): Promise<any> => {
 };
 
 export const getFollowedPosts = async (userId: string, offset: number, limit: number): Promise<any> => {
-    console.log('============================================');
   const userFollowing = [];
   const follow = await Follow.find({ follower: userId }, { _id: 0 }).select('user');
   follow.map((f) => userFollowing.push(f.user));
@@ -62,18 +61,24 @@ export const getChannelPosts = async (channelId: any): Promise<any> => {
 };
 
 export const getPostsByChannelId = async (channelId: any, offset: number, limit: number): Promise<any> => {
-
-  
   const posts = await Post.find({ channel: channelId })
-    .populate('author')
+    .populate({
+      path: 'author',
+      select: '-password',
+      populate: [
+        {
+          path: 'notifications',
+          populate: [{ path: 'author', select: '-password' }, { path: 'like' }, { path: 'comment' }],
+        },
+      ],
+    })
     .populate('likes')
     .populate({
       path: 'comments',
-      // options: { sort: { createdAt: 'asc' } },
-      populate: 'author',
-      populate: { path: 'likes', populate: 'user' },
-
-      // populate: { path: 'replies' },
+      options: { sort: { createdAt: 'asc' } },
+      populate: { path: 'author'},
+      populate: { path: 'likes', select: 'user' },
+      populate: { path: 'replies' },
     })
     .populate('channel')
     .skip(offset)
@@ -81,14 +86,12 @@ export const getPostsByChannelId = async (channelId: any, offset: number, limit:
     .sort([
       ['pinned', -1],
       ['createdAt', -1],
-    ])
-    .exec();
+    ]);
 
   return posts.filter((p: any) => p?.author?.banned !== true);
 };
 
 export const getPostsByAuthorId = async (authorId: any, offset: number, limit: number): Promise<any> => {
-  // console.log('============================================');
   const posts = await Post.find({ author: authorId })
     .populate({
       path: 'author',
@@ -105,11 +108,10 @@ export const getPostsByAuthorId = async (authorId: any, offset: number, limit: n
       path: 'comments',
       options: { sort: { createdAt: 'asc' } },
       populate: { path: 'author', select: '-password' },
-      populate: { path: 'likes', populate: 'user' },
+      populate: { path: 'likes', populate: { path: 'user', select: '-password' }},
       populate: { path: 'replies' },
     })
     .populate('channel')
-    .populate('author')
     .skip(offset)
     .limit(limit)
     .sort([

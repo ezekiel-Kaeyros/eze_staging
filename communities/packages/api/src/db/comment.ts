@@ -31,7 +31,7 @@ export const createReplyComment = async (commentId,comment: string, authorId: st
     post: postId,
     parentComment:commentId
   }).save();
-  await Comment.findOneAndUpdate({_id:commentId, postId},{ "$push": { "replies": newReply._id } },{new: true})
+  await Comment.findOneAndUpdate({_id:commentId, postId},{$push:{replies:newReply._id}})
 
   await newReply.populate('author').execPopulate();
 

@@ -12,7 +12,6 @@ import { getIdComment } from '../../../../store/auth';
 import CommentCreate from '../../CommentCreate';
 import { Item } from '../../../ConnexionCard/style';
 import Like from '../../../Like';
-import { getLikes } from '../Comment';
 // import Like from '../../Like';
 
 const deleteComment = async (id: string) => {
@@ -37,53 +36,32 @@ function parseTextWithLinks(text) {
     return `<a  href='/communities/profile/${id}'>${name}</a>`;
   });
 
-  // console.log('parsed text', parsedText);
+  console.log('parsed text', parsedText);
 
   // Render HTML with Next.js Link components
   return parsedText;
 }
 const ReplyComment: FC<CommentProps> = ({ comment, author, queryKey, post , id}) => {
-   const idComment = useSelector((state: RootState) => state.auth.idComment);
-   const reply = post.comments.filter((item) => item.parentComment == comment._id);
-   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-   const [loadLike, setLoadLike] = useState(false);
-   const [hasLiked, sethasLiked] = useState(null);
-   const [isLike, setIsLike] = useState('');
-   const dispatch = useDispatch();
-   const authUser = useSelector((state: RootState) => state.auth.user);
-   const { mutateAsync } = useMutation(deleteComment);
-   const queryClient = useQueryClient();
-   const { deleteNotification } = useNotifications();
-     const [commentValue, setCommentValue] = useState(comment?.likes?.length);
-     // const hasLiked = null;
-     const changeLike = (type: number) => {
-       if (type == 1) {
-         const val = commentValue - 1;
-         setCommentValue(val);
-       } else {
-         const val = commentValue + 1;
-         setCommentValue(val);
-       }
-     };
+  const idComment = useSelector((state: RootState) => state.auth.idComment);
+  const reply = post.comments.filter((item) => item.parentComment == comment._id);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isLike, setIsLike] = useState('');
+  const dispatch = useDispatch();
+  const authUser = useSelector((state: RootState) => state.auth.user);
+  const { mutateAsync } = useMutation(deleteComment);
+  const queryClient = useQueryClient();
+  const { deleteNotification } = useNotifications();
+  const [commentValue, setCommentValue] = useState('');
+  const hasLiked = null;
   // const hasLiked = comment.likes.find((post: any) => post === authUser?._id);
   // const view = comment.likes.filter((post: any) => {
   //   console.log(post);
   //   console.log(authUser?._id);
 
   // });
-    const hasLiked2 = comment?.likes?.find((post: any) => {
-      if (post?.user?._id == authUser?._id) {
-        // console.log('postTrue', post);
-
-        return post;
-      } else {
-        // console.log('postFalse', post?.user?._id);
-        // console.log('id', authUser?._id);
-      }
-    });
- const likesLength = comment && comment.likes ? comment.likes.length : 0;
- // const commentsLength = post.comments.length;
- const likes = likesLength > 0 ? likesLength + ' likes' : null;
+  const likesLength = comment.likes.length;
+  // const commentsLength = post.comments.length;
+  const likes = likesLength > 0 ? likesLength + ' likes' : null;
   // const getLikeHandler = (id: string) => {
   //   const reply = post.comments.find((item) => item._id == id);
   //   const likesLength = reply.likes.length;
@@ -91,24 +69,8 @@ const ReplyComment: FC<CommentProps> = ({ comment, author, queryKey, post , id})
   //   const likes = likesLength > 0 ? likesLength + ' likes' : null;
   //   return likes;
   // };
-  // console.log(author,'=====================',authUser?._id);
-  
-  const likeHandler = async (id: string) => {
-    // setIsLike('');
-    setLoadLike(true);
-    if (comment.likes.length > 0) {
-      const like = await getLikes(id);
-      // console.log('like', like);
-      const islike = like.filter((item: any) => item.user._id == authUser?._id);
-      islike.length > 0 ? sethasLiked(islike[0]._id) : sethasLiked(null);
-      // islike.length > 0 && console.log(islike[0].user);
-
-      // console.log('islike5698', islike);
-      setIsLike(id);
-    } else {
-      setIsLike(id);
-    }
-    setLoadLike(false);
+  const likeHandler = () => {
+    setIsLike('');
   };
   // const comments = commentsLength > 0 ? commentsLength + ' comments' : null;
   // console.log('post', post.comments);
@@ -160,13 +122,13 @@ const ReplyComment: FC<CommentProps> = ({ comment, author, queryKey, post , id})
   return (
     <>
       <Root>
-        <Link disableBorderOnHover href={`/communities/profile/${author}`}>
+        <Link disableBorderOnHover href={`/communities/profile/${author._id}`}>
           <Avatar image={author?.image} />
         </Link>
 
         <Container>
           <UserName>
-            <Link color="text" weight="bold" size="tiny" href={`/profile/${author}`}>
+            <Link color="text" weight="bold" size="tiny" href={`/profile/${author._id}`}>
               {author.fullName}
             </Link>
           </UserName>
@@ -182,23 +144,21 @@ const ReplyComment: FC<CommentProps> = ({ comment, author, queryKey, post , id})
           title="Remove the comment permanently?"
         />
 
-        {authUser && (authUser._id == author || authUser._id == author._id) && (
+        {authUser && authUser._id === author && (
           <StyledButton ghost onClick={() => setIsConfirmOpen(true)}>
             <CloseIcon width="10" />
           </StyledButton>
         )}
       </Root>
       <ContainerActionComment style={{ paddingLeft: '8%' }}>
-        <span
+        {/* <span
           style={{ marginRight: '20px', cursor: 'pointer' }}
           onClick={() => {
-            if (!loadLike) {
-              likeHandler(comment._id);
-            }
+            setIsLike(comment._id);
           }}
         >
-          {loadLike ? '...' : 'like'}
-        </span>
+          like
+        </span> */}
         <span
           onClick={() => {
             if (idComment === id) {
@@ -212,26 +172,19 @@ const ReplyComment: FC<CommentProps> = ({ comment, author, queryKey, post , id})
           reply
         </span>
         <div>
-          <Like
+          {/* <Like
             queryKey={queryKey}
             post={post}
-            hasLiked={hasLiked && { id: hasLiked }}
+            hasLiked={hasLiked}
             fullWidth
             withText
             type="reply"
             islike={isLike}
-            id={hasLiked2}
-            likes={commentValue > 0 && likes}
-            likeHandler={() => {
-              setIsLike('');
-            }}
-            likeHandler2={() => {
-              sethasLiked(null);
-            }}
-            updateLikes={changeLike}
-          />
+            id={isLike}
+            likes={likes}
+            likeHandler={likeHandler}
+          /> */}
         </div>
-        <span>{likes && commentValue}</span>
         {/* <span>{likes && comment.likes.length}</span> */}
       </ContainerActionComment>
 

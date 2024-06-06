@@ -13,12 +13,13 @@ export const useDispatchAuth = () => {
   const dispatch = useDispatch();
   const { push } = useRouter();
 
-  const token = JSON?.parse(cookies.get(Cookies.Token, { domain: '.eze.wiki' }));
-  // const token = cookies.get(Cookies.User_data);
+  // const token = JSON?.parse(cookies.get(Cookies.Token, { domain: '.eze.wiki' }));
+  const token = cookies.get(Cookies.User_data);
 
   const fetch = async () => {
-    const token = JSON?.parse(cookies.get(Cookies.Token, { domain: '.eze.wiki' }));
+    // const token = JSON?.parse(cookies.get(Cookies.Token, { domain: '.eze.wiki' }));
     // const token = JSON?.parse(cookies.get(Cookies.Token));
+    const token = cookies.get(Cookies.Token);
     try {
       axios.defaults.headers.common = { Authorization: `bearer ${token}` };
       const { data } = await axios.get('/auth-user');
@@ -41,7 +42,7 @@ export const useDispatchAuth = () => {
     if (token) {
       fetch();
     } else {
-     // push(HOME_URL);
+      // push(HOME_URL);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);

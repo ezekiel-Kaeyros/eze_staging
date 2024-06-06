@@ -7,7 +7,8 @@ import CheckboxCommunityChip from '../checkbox-community-chip/CheckboxCommunityC
 import { redirect, useRouter } from 'next/navigation';
 import { isFirstTime } from '@/cookies/cookies';
 
-const COMMUNITIES_URL = 'https://communities.eze.ink';
+// const COMMUNITIES_URL = 'https://communities.eze.wiki/';
+const COMMUNITIES_URL: any = process.env.NEXT_PUBLIC_COMMUNITIES_URL;
 const communities = [
   {
     id: 1,

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 import { i18n } from './i18n.config';
+import { serialize } from 'cookie';
 
 import { match as matchLocale } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
@@ -24,6 +25,34 @@ export function middleware(request: NextRequest) {
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
 
+  const url = request.nextUrl.clone();
+  const token = url.searchParams.get('token') || '';
+  const userEncoded = url.searchParams.get('user') || '';
+
+  if (userEncoded != '' || token != '') {
+    // console.log('USER DATA: ', userEncoded, typeof userEncoded);
+    // Decode the user data from the query parameter
+    const userString = decodeURIComponent(userEncoded);
+    // console.log('User string: ', userString, typeof userString);
+    const userJson = userEncoded;
+    // const userJson = JSON.parse(userEncoded);
+    // console.log('User Encoded Data stringify: ', userJson);
+    // const userJson = userData;
+
+    if (token) {
+      const response = NextResponse.next();
+      response.cookies.set('token', token, {
+        httpOnly: false,
+        secure: false,
+        path: '/',
+      });
+      response.cookies.set('user_data', userJson, {
+        path: '/',
+      });
+      return response;
+    }
+  }
+
   // Redirect if there is no locale
   if (pathnameIsMissingLocale) {
     const locale = getLocale(request);
@@ -35,6 +64,8 @@ export function middleware(request: NextRequest) {
     );
   }
 }
+
+export function saveTokenToCookie(request: NextRequest) {}
 
 export const config = {
   // Matcher ignoring `/_next/` and `/api/`

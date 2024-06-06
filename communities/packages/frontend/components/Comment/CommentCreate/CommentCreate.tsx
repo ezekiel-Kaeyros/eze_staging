@@ -24,7 +24,6 @@ const createCommentReply = async ({comment_id, comment, postId, userId }) => {
   return newComment.data;
 };
 
-
 const fetchUsers = async () => {
   const users = await axios.get('/users/get-users');
   return users;
