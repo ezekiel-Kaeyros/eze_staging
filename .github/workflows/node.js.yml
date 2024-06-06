@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Create env file for API backend
         run: |
-          cd $GITHUB_WORKSPACE/communities/packages/api && \
+          cd communities/packages/api && \
           touch .env && \
           echo "API_PORT=4000" > .env && \
           echo "API_URL=https://backcommunities.eze.ink" >> .env && \
