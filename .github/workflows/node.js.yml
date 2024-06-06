@@ -1,4 +1,4 @@
-name:  Pipelines Staging
+name: Pipelines Staging
 
 on:
   push:
@@ -41,6 +41,7 @@ jobs:
           cd landing-page && \
           touch .env && \
           echo "REACT_APP_API_URL=https://backcommunities.eze.ink" > .env && \
+          echo 'NEXT_PUBLIC_MAP_BASE_URL="https://back-end.kaeyros.shop"' >> .env && \
           echo 'NEXT_PUBLIC_COMMUNITIES_URL="https://communities.eze.ink/"' >> .env && \
           echo 'NEXT_PUBLIC_SSO_LOGIN_URL="https://sso.eze.ink/auth/login"' >> .env
 
@@ -93,25 +94,4 @@ jobs:
     runs-on: ubuntu-latest
     needs: login-dockerhub
     steps:
-      - name: Build backend Docker image
-        run: docker build -t ezekielkaeyros/backend_communities_staging ./communities/packages/api
-      - name: Push backend Docker image
-        run: docker push ezekielkaeyros/backend_communities_staging:latest
-
-  build-and-push-landing-image:
-    runs-on: ubuntu-latest
-    needs: login-dockerhub
-    steps:
-      - name: Build landing Docker image
-        run: docker build -t ezekielkaeyros/eze_landing_staging ./landing-page
-      - name: Push landing Docker image
-        run: docker push ezekielkaeyros/eze_landing_staging:latest
-
-  build-and-push-sso-image:
-    runs-on: ubuntu-latest
-    needs: login-dockerhub
-    steps:
-      - name: Build SSO image
-        run: docker build -t ezekielkaeyros/sso_staging ./sso/eze-auth0
-      - name: Push SSO image
-        run: docker push ezekielkaeyros/sso_staging:latest
+      - name: Build
