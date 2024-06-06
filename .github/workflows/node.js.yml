@@ -94,4 +94,25 @@ jobs:
     runs-on: ubuntu-latest
     needs: login-dockerhub
     steps:
-      - name: Build
+      - name: Build backend Docker image
+        run: docker build -t ezekielkaeyros/backend_communities_staging ./communities/packages/api
+      - name: Push backend Docker image
+        run: docker push ezekielkaeyros/backend_communities_staging:latest
+
+  build-and-push-landing-image:
+    runs-on: ubuntu-latest
+    needs: login-dockerhub
+    steps:
+      - name: Build landing Docker image
+        run: docker build -t ezekielkaeyros/eze_landing_staging ./landing-page
+      - name: Push landing Docker image
+        run: docker push ezekielkaeyros/eze_landing_staging:latest
+
+  build-and-push-sso-image:
+    runs-on: ubuntu-latest
+    needs: login-dockerhub
+    steps:
+      - name: Build SSO image
+        run: docker build -t ezekielkaeyros/sso_staging ./sso/eze-auth0
+      - name: Push SSO image
+        run: docker push ezekielkaeyros/sso_staging:latest
