@@ -11,11 +11,6 @@ jobs:
     steps:
       - name: Checkout-repository
         uses: actions/checkout@v3
-
-  create-env-file-api:
-    runs-on: ubuntu-latest
-    needs: checkout-repository
-    steps:
       - name: view the directory
         run: |
           ls 
@@ -35,7 +30,6 @@ jobs:
           echo "CLOUDINARY_SECRET=EnwDIzzscMxY5SacVWoqUXE0mzw" >> .env && \
           echo "MAILGUN_API_KEY=YOUR_MAILGUN_API_KEY" >> .env && \
           echo "MAILGUN_DOMAIN=YOUR_MAILGUN_DOMAIN" >> .env
-
   create-env-file-landing-page:
     runs-on: ubuntu-latest
     needs: checkout-repository
