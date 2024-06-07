@@ -1,24 +1,20 @@
-name: Pipelines Staging
+name: CI Pipeliness
 
 on:
   push:
     branches:
-      - main 
-
+      - develop 
 jobs:
-  checkout-repository:
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-  create-env-file-api:
-    runs-on: ubuntu-latest
-    needs: checkout-repository
-    steps:
-      - name: Create env file for API backend
+      - name: create env file
         run: |
-          cd $GITHUB_WORKSPACE/communities/packages/api && \
+          cd communities/packages/api && \
           touch .env && \
           echo "API_PORT=4000" > .env && \
           echo "API_URL=https://backcommunities.eze.ink" >> .env && \
@@ -32,57 +28,40 @@ jobs:
           echo "MAILGUN_API_KEY=YOUR_MAILGUN_API_KEY" >> .env && \
           echo "MAILGUN_DOMAIN=YOUR_MAILGUN_DOMAIN" >> .env
 
-  create-env-file-landing-page:
-    runs-on: ubuntu-latest
-    needs: checkout-repository
-    steps:
-      - name: Create env file for landing page 
+      - name: create env file landing page 
         run: |
-          cd $GITHUB_WORKSPACE/landing-page && \
+          cd landing-page && \
           touch .env && \
-          echo "REACT_APP_API_URL=https://backcommunities.eze.ink" > .env && \
-          echo 'NEXT_PUBLIC_COMMUNITIES_URL="https://communities.eze.ink/"' >> .env && \
-          echo 'NEXT_PUBLIC_SSO_LOGIN_URL="https://sso.eze.ink/auth/login"' >> .env
+          echo "REACT_APP_API_URL=https://backcommunities.eze.ink" > .env
 
-  create-env-file-communities-packages:
-    runs-on: ubuntu-latest
-    needs: checkout-repository
-    steps:
-      - name: Create env file for communities frontend
-        run: |
-          cd $GITHUB_WORKSPACE/communities/packages/frontend && \
-          touch .env && \
-          echo "NODE_ENV=http://localhost:4000" > .env && \
-          echo "GOOGLE_ANALYTICS_ID=G-MD706N8TZV" >> .env && \
-          echo "NEXT_API_PRODUCTION_URL=https://backcommunities.eze.ink" >> .env && \
-          echo "NEXT_PUBLIC_COMMUNITIES_URL=https://communities.eze.ink" >> .env && \
-          echo "NEXT_PUBLIC_SSO_LOGIN_URL=https://sso.eze.ink/auth/login" >> .env && \
-          echo "NEXT_PUBLIC_LANDINGPAGE_URL=https://eze.ink" >> .env
+      - name: Build Docker image
+        run: docker-compose build
 
-  create-env-file-sso:
-    runs-on: ubuntu-latest
-    needs: checkout-repository
-    steps:
-      - name: Create env file for SSO
-        run: |
-          cd $GITHUB_WORKSPACE/sso/eze-auth0 && \
-          touch .env && \
-          echo "MONGODB_URI=mongodb+srv://eze:mongodb123@cluster0.dbnvshu.mongodb.net/eze_sso?retryWrites=true&w=majority&appName=Cluster0" > .env && \
-          echo "PORT=3000" >> .env && \
-          echo "SSO_URL=https://sso.eze.ink" >> .env && \
-          echo "REDIRECT_ORIGIN=https://eze.ink" >> .env && \
-          echo "CALLBACK_URL=https://sso.eze.ink/auth/login/callback" >> .env
+      - name: Tag Docker image
+        run: docker tag frontend_communities ezekielkaeyros/frontend_eze_staging
 
-  login-dockerhub:
-    runs-on: ubuntu-latest
-    needs: [create-env-file-api, create-env-file-landing-page, create-env-file-communities-packages, create-env-file-sso]
-    steps:
+      - name: Tag Docker image
+        run: docker tag backend_communities ezekielkaeyros/backend_communities_staging
+
+      - name: Tag Docker image
+        run: docker tag landing_communities ezekielkaeyros/eze_landing_staging
+
       - name: Login to DockerHub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-  build-and-push-frontend-image:
-    runs-on: ubuntu-latest
-    needs: login-dockerhub
-    steps:
-      - name: Build frontend Docker image
-        run: docker build -
+      - name: Push Docker image
+        run: docker push ezekielkaeyros/frontend_eze_staging:latest
+
+      - name: Push Docker image
+        run: docker push ezekielkaeyros/backend_communities_staging:latest
+
+      - name: Push Docker image
+        run: docker push ezekielkaeyros/eze_landing_staging:latest
+
+      - name: build sso image
+        run: |
+          cd sso/eze-auth0 && \
+          docker build -t ezekielkaeyros/sso_staging .
+
+      - name: push sso image
+        run: docker push ezekielkaeyros/sso_staging:latest
