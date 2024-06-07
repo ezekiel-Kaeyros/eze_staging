@@ -1,9 +1,9 @@
-name:  Pipelines Staging
+name: Pipelines Staging
 
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   checkout-repository:
@@ -15,8 +15,10 @@ jobs:
   create-env-file-api:
     runs-on: ubuntu-latest
     needs: checkout-repository
+    outputs:
+      env-path: ${{ steps.env-path.outputs.path }}
     steps:
-      - name: Checkout repository1
+      - name: Checkout repository
         uses: actions/checkout@v3
       - name: Create env file for API backend
         run: |
@@ -33,26 +35,36 @@ jobs:
           echo "CLOUDINARY_SECRET=EnwDIzzscMxY5SacVWoqUXE0mzw" >> .env && \
           echo "MAILGUN_API_KEY=YOUR_MAILGUN_API_KEY" >> .env && \
           echo "MAILGUN_DOMAIN=YOUR_MAILGUN_DOMAIN" >> .env
+      - name: Save env path
+        id: env-path
+        run: echo "::set-output name=path::communities/packages/api/.env"
 
   create-env-file-landing-page:
     runs-on: ubuntu-latest
     needs: checkout-repository
+    outputs:
+      env-path: ${{ steps.env-path.outputs.path }}
     steps:
-      - name: Checkout repository3
+      - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Create env file for landing page 
+      - name: Create env file for landing page
         run: |
           cd landing-page && \
           touch .env && \
           echo "REACT_APP_API_URL=https://backcommunities.eze.ink" > .env && \
           echo 'NEXT_PUBLIC_COMMUNITIES_URL="https://communities.eze.ink/"' >> .env && \
           echo 'NEXT_PUBLIC_SSO_LOGIN_URL="https://sso.eze.ink/auth/login"' >> .env
+      - name: Save env path
+        id: env-path
+        run: echo "::set-output name=path::landing-page/.env"
 
   create-env-file-communities-packages:
     runs-on: ubuntu-latest
     needs: checkout-repository
+    outputs:
+      env-path: ${{ steps.env-path.outputs.path }}
     steps:
-      - name: Checkout repository4
+      - name: Checkout repository
         uses: actions/checkout@v3
       - name: Create env file for communities frontend
         run: |
@@ -64,12 +76,17 @@ jobs:
           echo "NEXT_PUBLIC_COMMUNITIES_URL=https://communities.eze.ink" >> .env && \
           echo "NEXT_PUBLIC_SSO_LOGIN_URL=https://sso.eze.ink/auth/login" >> .env && \
           echo "NEXT_PUBLIC_LANDINGPAGE_URL=https://eze.ink" >> .env
+      - name: Save env path
+        id: env-path
+        run: echo "::set-output name=path::communities/packages/frontend/.env"
 
   create-env-file-sso:
     runs-on: ubuntu-latest
     needs: checkout-repository
+    outputs:
+      env-path: ${{ steps.env-path.outputs.path }}
     steps:
-      - name: Checkout repository5
+      - name: Checkout repository
         uses: actions/checkout@v3
       - name: Create env file for SSO
         run: |
@@ -80,54 +97,74 @@ jobs:
           echo "SSO_URL=https://sso.eze.ink" >> .env && \
           echo "REDIRECT_ORIGIN=https://eze.ink" >> .env && \
           echo "CALLBACK_URL=https://sso.eze.ink/auth/login/callback" >> .env
-
-  login-dockerhub:
-    runs-on: ubuntu-latest
-    needs: [create-env-file-api, create-env-file-landing-page, create-env-file-communities-packages, create-env-file-sso]
-    steps:
-      - name: Login to DockerHub
-        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Save env path
+        id: env-path
+        run: echo "::set-output name=path::sso/eze-auth0/.env"
 
   build-and-push-frontend-image:
     runs-on: ubuntu-latest
-    needs: login-dockerhub
+    needs: [create-env-file-api, create-env-file-landing-page, create-env-file-communities-packages, create-env-file-sso]
     steps:
-      - name: Checkout repository6
+      - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Build frontend Docker image
-        run: docker build -t ezekielkaeyros/frontend_eze_staging ./communities
+        env:
+          ENV_PATH: ${{ needs.create-env-file-communities-packages.outputs.env-path }}
+        run: |
+          cp $ENV_PATH communities/packages/frontend/.env && \
+          docker build -t ezekielkaeyros/frontend_eze_staging ./communities/packages/frontend
       - name: Push frontend Docker image
         run: docker push ezekielkaeyros/frontend_eze_staging:latest
 
   build-and-push-backend-image:
     runs-on: ubuntu-latest
-    needs: login-dockerhub
+    needs: create-env-file-api
     steps:
-      - name: Checkout repository7
+      - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Build backend Docker image
-        run: docker build -t ezekielkaeyros/backend_communities_staging ./communities/packages/api
+        env:
+          ENV_PATH: ${{ needs.create-env-file-api.outputs.env-path }}
+        run: |
+          cp $ENV_PATH communities/packages/api/.env && \
+          docker build -t ezekielkaeyros/backend_communities_staging ./communities/packages/api
       - name: Push backend Docker image
         run: docker push ezekielkaeyros/backend_communities_staging:latest
 
   build-and-push-landing-image:
     runs-on: ubuntu-latest
-    needs: login-dockerhub
+    needs: create-env-file-landing-page
     steps:
-      - name: Checkout repository8
+      - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Build landing Docker image
-        run: docker build -t ezekielkaeyros/eze_landing_staging ./landing-page
+        env:
+          ENV_PATH: ${{ needs.create-env-file-landing-page.outputs.env-path }}
+        run: |
+          cp $ENV_PATH landing-page/.env && \
+          docker build -t ezekielkaeyros/eze_landing_staging ./landing-page
       - name: Push landing Docker image
         run: docker push ezekielkaeyros/eze_landing_staging:latest
 
   build-and-push-sso-image:
     runs-on: ubuntu-latest
-    needs: login-dockerhub
+    needs: create-env-file-sso
     steps:
-      - name: Checkout repository9
+      - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Build SSO image
-        run: docker build -t ezekielkaeyros/sso_staging ./sso/eze-auth0
+        env:
+          ENV_PATH: ${{ needs.create-env-file-sso.outputs.env-path }}
+        run: |
+          cp $ENV_PATH sso/eze-auth0/.env && \
+          docker build -t ezekielkaeyros/sso_staging ./sso/eze-auth0
       - name: Push SSO image
         run: docker push ezekielkaeyros/sso_staging:latest
