@@ -16,9 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: checkout-repository
     steps:
+      - name: view the directory
+        run: |
+          ls 
       - name: Create env file for API backend
         run: |
-          ls && \
+        
           cd eze_staging/eze_staging/communities/packages/api && \ && \
           touch .env && \
           echo "API_PORT=4000" > .env && \
