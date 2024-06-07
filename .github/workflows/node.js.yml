@@ -9,15 +9,17 @@ jobs:
   checkout-repository:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout-repository
+      - name: Checkout repository
         uses: actions/checkout@v3
-      - name: view the directory
-        run: |
-          ls 
+  
+  create-env-file-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository2
+        uses: actions/checkout@v3
       - name: Create env file for API backend
         run: |
-        
-          cd eze_staging/eze_staging/communities/packages/api && \ && \
+          cd communities/packages/api && \ && \
           touch .env && \
           echo "API_PORT=4000" > .env && \
           echo "API_URL=https://backcommunities.eze.ink" >> .env && \
@@ -30,6 +32,7 @@ jobs:
           echo "CLOUDINARY_SECRET=EnwDIzzscMxY5SacVWoqUXE0mzw" >> .env && \
           echo "MAILGUN_API_KEY=YOUR_MAILGUN_API_KEY" >> .env && \
           echo "MAILGUN_DOMAIN=YOUR_MAILGUN_DOMAIN" >> .env
+
   create-env-file-landing-page:
     runs-on: ubuntu-latest
     needs: checkout-repository
