@@ -121,7 +121,7 @@ jobs:
           name: env-frontend
           path: .
       - name: Extract env file
-        run: tar -xzf env-frontend.tar.gz
+        run: tar -xzf env-frontend.tar.gz -C communities/packages/frontend
       - name: Login to DockerHub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Build frontend Docker image
@@ -141,7 +141,7 @@ jobs:
           name: env-api
           path: .
       - name: Extract env file
-        run: tar -xzf env-api.tar.gz
+        run: tar -xzf env-api.tar.gz -C communities/packages/api
       - name: Login to DockerHub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Build backend Docker image
@@ -161,7 +161,7 @@ jobs:
           name: env-landing
           path: .
       - name: Extract env file
-        run: tar -xzf env-landing.tar.gz
+        run: tar -xzf env-landing.tar.gz -C landing-page
       - name: Login to DockerHub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Build landing Docker image
@@ -181,7 +181,7 @@ jobs:
           name: env-sso
           path: .
       - name: Extract env file
-        run: tar -xzf env-sso.tar.gz
+        run: tar -xzf env-sso.tar.gz -C sso/eze-auth0
       - name: Login to DockerHub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Build SSO image
