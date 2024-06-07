@@ -9,7 +9,7 @@ jobs:
   checkout-repository:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout-repository
         uses: actions/checkout@v3
 
   create-env-file-api:
@@ -18,6 +18,7 @@ jobs:
     steps:
       - name: Create env file for API backend
         run: |
+          ls && \
           cd eze_staging/eze_staging/communities/packages/api && \ && \
           touch .env && \
           echo "API_PORT=4000" > .env && \
