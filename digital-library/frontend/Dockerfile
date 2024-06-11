@@ -2,14 +2,13 @@
 FROM node:20.9.0-alpine AS BUILD_IMAGE
 WORKDIR /app
 COPY package*.json ./
-COPY next.config.js ./
-RUN npm install --force
+RUN npm install
 COPY . .
 RUN  npm run build
 #
 
 # Production Stage
-FROM node:20.9.0-alpine AS PRODUCTION_STAGE
+FROM node:20.9.0 AS PRODUCTION_STAGE
 WORKDIR /app
 COPY --from=BUILD_IMAGE /app/package*.json ./
 COPY --from=BUILD_IMAGE /app/next.config.js ./

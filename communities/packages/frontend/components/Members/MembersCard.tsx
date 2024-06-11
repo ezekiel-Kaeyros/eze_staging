@@ -25,7 +25,7 @@ const MembersCard: FC<MembersCardProps> = ({ user, queryKey }) => {
   }, []);
 
   const splitFullName = () => {
-    const splitWords = fullName ? fullName.split(' ').slice(0, 2).join(' ') : '';
+    const splitWords =fullName ? fullName.split(' ').slice(0, 2).join(' '):'';
     const firstLetters = splitWords
       .split(' ')
       .map((a) => a.charAt(0))

@@ -12,9 +12,6 @@ import { CommunityIcon } from '../components/ui/icons';
 import Seo from '../components/Seo';
 import { useDispatchAuth } from '../utils/useDispatchAuth';
 import RepostCard from '../components/Post/RepostCard';
-import { useTranslation } from 'react-i18next';
-import { GetStaticProps } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const fetchPostsByFollowing = async ({ pageParam = 0 }) => {
   const { data } = await axios.get(`/posts/follow?offset=${pageParam}&limit=${DataLimit.PostsByFollowing}`);
@@ -22,8 +19,6 @@ const fetchPostsByFollowing = async ({ pageParam = 0 }) => {
 };
 
 const Home: FC = () => {
-    const { t:translate } = useTranslation('common');
-    console.log('translation', translate('welcome'));
   const dispatch = useDispatch();
 
   const authUser = useSelector((state: RootState) => state.auth.user);
@@ -95,9 +90,5 @@ const Home: FC = () => {
     </Layout>
   );
 };
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale ?? 'en', ['common'])),
-  },
-});
+
 export default Home;

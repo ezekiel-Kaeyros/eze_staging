@@ -23,7 +23,6 @@ import HeaderNotifications from './HeaderNotifications';
 import Search from '../Search';
 import { RootState } from '../../store';
 import { useBreakpoints } from '../../utils';
-import LanguageSwitcher from './LanguageSwitcher';
 
 interface HeaderProps {
   toggleSidebar?: () => void;
@@ -82,9 +81,9 @@ const Header: ForwardRefRenderFunction<HTMLButtonElement, HeaderProps> = ({ togg
             <MenuIcon />
           </Hamburger>
           <Logo>
-            <Link href="/" disableBorderOnHover>
+            <a href="https://eze.ink/en">
               <img alt="logo" style={{ height: 35 }} src={logo} />
-            </Link>
+            </a>
           </Logo>
           <Spacing left="sm" />
           <SearchContainer>
@@ -145,9 +144,6 @@ const Header: ForwardRefRenderFunction<HTMLButtonElement, HeaderProps> = ({ togg
                 closeDropDown={closeDropDown}
               />
             )}
-          </div>
-          <div className='pl-2'>
-            <LanguageSwitcher/>
           </div>
         </NotificationsAndAvatar>
       </Wrapper>

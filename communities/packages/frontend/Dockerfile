@@ -1,19 +1,15 @@
 # Build Stage
-FROM node:20.11.1-alpine AS BUILD_IMAGE
+FROM node:18-alpine AS BUILD_IMAGE
 WORKDIR /app
-COPY package.json ./
-COPY next.config.js ./
+COPY package*.json ./
 RUN yarn install
 RUN yarn add styled-components
-RUN yarn add react-i18next
-RUN yarn add next-i18next
-RUN yarn add @types/i18next @types/react-i18next
 COPY . .
 RUN yarn build
 
 
 # Production Stage
-FROM node:20.11.1-alpine AS PRODUCTION_STAGE
+FROM node:18-alpine AS PRODUCTION_STAGE
 WORKDIR /app
 COPY --from=BUILD_IMAGE /app/package*.json ./
 COPY --from=BUILD_IMAGE /app/.next ./.next

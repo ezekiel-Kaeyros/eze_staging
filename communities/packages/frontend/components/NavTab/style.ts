@@ -3,7 +3,7 @@ import styled from 'styled-components';
 interface IconProps {
   isActive: boolean;
 }
-
+// styled(Button)<RootProps>
 export const Icon = styled.div<IconProps>`
   fill: ${(p) => p?.isActive && 'red'};
 `;
