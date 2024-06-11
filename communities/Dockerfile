@@ -1,12 +1,12 @@
 # Build Stage
 FROM node:20.11.1-alpine AS BUILD_IMAGE
 WORKDIR /app
-COPY package*.json ./
+COPY package.json yarn.lock ./
 RUN yarn install
 COPY . .
 WORKDIR /app/packages/frontend
-RUN  yarn 
 RUN  npm install
+RUN  yarn install
 RUN  yarn add styled-components 
 RUN  yarn build
 
