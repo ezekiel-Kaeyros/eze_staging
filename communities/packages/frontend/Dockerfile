@@ -7,8 +7,6 @@ RUN yarn add styled-components
 RUN yarn add react-i18next
 RUN yarn add next-i18next
 RUN yarn add @types/i18next @types/react-i18next
-RUN yarn add @types/next-i18next
-RUN yarn add @i18next/react-i18next
 COPY . .
 RUN yarn build
 
