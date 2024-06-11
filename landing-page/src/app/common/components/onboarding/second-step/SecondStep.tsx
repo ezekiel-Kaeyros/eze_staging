@@ -222,49 +222,49 @@ const SecondStep = () => {
     }
   };
 
-  const handleJoin = async () => {
-    if (communities && communities.length > 0) {
-      let row = 0;
-      communities.map(async (item) => {
-        const joiningDetails = {
-          userId: JSON.parse(user)?._id,
-          channelId: item._id,
-          url: API_URL,
-        };
-        try {
-          const response = await joinChannel(joiningDetails);
-          if (response.status == 200) {
-            const res = await updateChannel(
-              {
-                _id: item._id,
-                name: item.name,
-                authRequired: true,
-                description: item.description,
-                members: item.members ? item.members + 1 : 1,
-              },
-              API_URL
-            );
-            row = row + 1;
+  // const handleJoin = async () => {
+  //   if (communities && communities.length > 0) {
+  //     let row = 0;
+  //     communities.map(async (item) => {
+  //       const joiningDetails = {
+  //         userId: JSON.parse(user)?._id,
+  //         channelId: item._id,
+  //         url: API_URL,
+  //       };
+  //       try {
+  //         const response = await joinChannel(joiningDetails);
+  //         if (response.status == 200) {
+  //           const res = await updateChannel(
+  //             {
+  //               _id: item._id,
+  //               name: item.name,
+  //               authRequired: true,
+  //               description: item.description,
+  //               members: item.members ? item.members + 1 : 1,
+  //             },
+  //             API_URL
+  //           );
+  //           row = row + 1;
 
-            // const row = number ? number + 1 : 1;
-            setnumber(row);
-          }
-        } catch (error) {
-          console.log('error', error);
-            row = row + 1;
+  //           // const row = number ? number + 1 : 1;
+  //           setnumber(row);
+  //         }
+  //       } catch (error) {
+  //         console.log('error', error);
+  //           row = row + 1;
 
-          // const row = number ? number + 1 : 1;
-          // console.log(row);
+  //         // const row = number ? number + 1 : 1;
+  //         // console.log(row);
 
-           setnumber(row);
-        }
-      });
-      // row == communities.length && push(COMMUNITIES_URL);
-      // setnumber(row);
-    } else {
-      setnumber(0);
-    }
-  };
+  //          setnumber(row);
+  //       }
+  //     });
+  //     // row == communities.length && push(COMMUNITIES_URL);
+  //     // setnumber(row);
+  //   } else {
+  //     setnumber(0);
+  //   }
+  // };
   return (
     <form className="w-11/12" onSubmit={handleSubmit(onSubmit)}>
       <div>

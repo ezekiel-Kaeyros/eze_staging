@@ -1,5 +1,5 @@
 # Build Stage
-FROM node:18-alpine AS BUILD_IMAGE
+FROM node:20.11.0-alpine AS BUILD_IMAGE
 WORKDIR /app
 COPY package*.json ./
 RUN yarn install
