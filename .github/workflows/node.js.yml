@@ -72,7 +72,6 @@ jobs:
         run: |
           cd communities/packages/frontend && \
           touch .env && \
-          echo "NODE_ENV=production" > .env && \
           echo "GOOGLE_ANALYTICS_ID=G-MD706N8TZV" >> .env && \
           echo "NEXT_API_PRODUCTION_URL=https://backcommunities.eze.ink" >> .env && \
           echo "NEXT_PUBLIC_COMMUNITIES_URL=https://communities.eze.ink" >> .env && \
