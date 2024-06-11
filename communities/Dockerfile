@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN yarn install
 COPY . .
 WORKDIR /app/packages/frontend
-RUN  yarn install
+RUN  yarn 
 RUN  npm install
 RUN  yarn add styled-components 
 RUN  yarn build
