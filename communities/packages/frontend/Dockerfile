@@ -2,7 +2,7 @@
 FROM node:20.11.0-alpine AS BUILD_IMAGE
 WORKDIR /app
 COPY package*.json ./
-RUN yarn install
+RUN yarn 
 RUN yarn add styled-components
 COPY . .
 RUN yarn build
@@ -25,5 +25,4 @@ CMD ["npm", "start"]
 
 
 
-20.9.0
 
