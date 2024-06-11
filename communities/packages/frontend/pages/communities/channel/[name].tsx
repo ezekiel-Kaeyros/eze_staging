@@ -13,7 +13,10 @@ import { CommunityIcon } from '../../../components/ui/icons';
 import { openAuthPopup, PopupType } from '../../../store/auth';
 import ChannelInfoLayout from '../../../components/Layout/ChannelInfoLayout';
 import { useDispatchAuth } from '../../../utils/useDispatchAuth';
-
+import RepostCard from '../../../components/Post/RepostCard';
+import { useTranslation } from 'react-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { GetStaticProps } from 'next';
 const fetchChannelByName = async (channelName: string) => {
   const { data } = await axios.get(`/channels/${channelName}`);
   return data;
@@ -32,6 +35,11 @@ interface ChannelProps {
 }
 
 const Channel: FC<ChannelProps> = ({ channel }) => {
+
+  
+  
+  console.log('channel===========',channel);
+  
   const dispatch = useDispatch();
   const authUser = useSelector((state: RootState) => state.auth.user);
 
@@ -55,7 +63,7 @@ const Channel: FC<ChannelProps> = ({ channel }) => {
     );
   }
 
-  const isJoined = authUser?.joinedChannels?.find((channel) => channel._id === channel._id);
+  const isJoined = authUser?.joinedChannels?.find((chanel) => chanel._id === channel._id);
 
   return (
     <ChannelInfoLayout
@@ -66,6 +74,10 @@ const Channel: FC<ChannelProps> = ({ channel }) => {
             channelId={channel._id}
             name={channel.name}
             description={channel.description}
+            member={channel.members}
+            image={channel.image}
+            cover={channel.coverImage}
+            // img={channel.coverImage}
           />
         </Spacing>
       }
@@ -74,7 +86,7 @@ const Channel: FC<ChannelProps> = ({ channel }) => {
 
       {(authUser && isJoined && (
         <PostCreateButton queryKey={['postsByChannelName', channel._id]} channel={channel} />
-      )) || <h2>You need to join to be able to see posts</h2>}
+      )) || <h2></h2>}
 
       {!authUser && (
         <Spacing bottom="sm">
@@ -97,9 +109,27 @@ const Channel: FC<ChannelProps> = ({ channel }) => {
         data?.pages?.map((posts, i) => {
           return (
             <Fragment key={i}>
-              {posts?.map((post: Post) => (
-                <PostCard refetch={refetch} queryKey={['postsByChannelName', channel._id]} key={post._id} post={post} />
-              ))}
+              {posts?.map((post: Post) => {
+                if (post.postId && post.postId.length > 0) {
+                  return (
+                    <RepostCard
+                      refetch={refetch}
+                      queryKey={['postsByChannelName', channel._id]}
+                      key={post._id}
+                      post={post}
+                    />
+                  );
+                } else {
+                  return (
+                    <PostCard
+                      refetch={refetch}
+                      queryKey={['postsByChannelName', channel._id]}
+                      key={post._id}
+                      post={post}
+                    />
+                  );
+                }
+              })}
             </Fragment>
           );
         })}
@@ -113,5 +143,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const channel = await fetchChannelByName(params.name as string);
   return { props: { channel: channel } };
 };
+
 
 export default Channel;

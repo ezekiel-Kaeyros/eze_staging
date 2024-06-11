@@ -11,6 +11,7 @@ import Seo from '../../../components/Seo';
 import { GetServerSideProps } from 'next';
 import LayoutCommunities from '../../../components/Layout/CommuntiesLayout';
 import { useRouter } from 'next/router';
+import RepostCard from '../../../components/Post/RepostCard';
 
 const fetchUser = async ({ queryKey }) => {
   const [, id] = queryKey;
@@ -101,7 +102,30 @@ const ProfilePage: FC<ProfilePageProps> = () => {
               {posts?.pages?.map((posts, i) => {
                 return (
                   <Fragment key={i}>
-                    {posts?.map((post: Post) => (
+                    {posts?.map((post: Post) => {
+                      if (post.postId && post.postId.length > 0) {
+                        return (
+                          <RepostCard
+                            refetch={refetch}
+                            displayChannelName
+                            queryKey={['postsByAuthorId', user._id]}
+                            key={post._id}
+                            post={post}
+                          />
+                        );
+                      } else {
+                        return (
+                          <PostCard
+                            refetch={refetch}
+                            displayChannelName
+                            queryKey={['postsByAuthorId', user._id]}
+                            key={post._id}
+                            post={post}
+                          />
+                        );
+                      }
+                    })}
+                    {/* {posts?.map((post: Post) => (
                       <PostCard
                         refetch={refetch}
                         displayChannelName
@@ -109,7 +133,7 @@ const ProfilePage: FC<ProfilePageProps> = () => {
                         key={post._id}
                         post={post}
                       />
-                    ))}
+                    ))} */}
                   </Fragment>
                 );
               })}

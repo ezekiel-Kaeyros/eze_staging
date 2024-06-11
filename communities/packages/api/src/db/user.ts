@@ -61,7 +61,7 @@ export const updateUserResetPasswordToken = async (userId: string, token: string
   const user = await User.findOneAndUpdate({ _id: userId }, { resetPasswordToken: token });
   return user;
 };
-
+ 
 export const createUser = async (
   fullName: string,
   username: string,
@@ -144,6 +144,9 @@ export const updateUserBanned = async (id: string, banned: boolean): Promise<any
 };
 
 export const joinChannel = async (channelId: string, userId: string): Promise<any> => {
+  console.log('channelId===',channelId);
+  console.log('userId======',userId);
+  
   try {
     const user = await User.findById(userId);
 

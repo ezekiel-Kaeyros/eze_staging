@@ -16,7 +16,8 @@ import { useAuth } from '@/app/hooks/useAuth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
-import { getIsFirstTime } from '@/cookies/cookies';
+import { getIsFirstTime, setUserCookies } from '@/cookies/cookies';
+import { getUserInfo } from '@/utils/getUserInfo';
 
 // const COMMUNITIES_URL = 'https://communities.eze.wiki/';
 const COMMUNITIES_URL: any = process.env.NEXT_PUBLIC_COMMUNITIES_URL
@@ -66,8 +67,9 @@ const LoginForm: React.FC<{ login: any }> = ({ login }) => {
         } else {
           dispatch(setAuthUser({ user: res?.data }));
           toast.success('Logged in successfully');
-          (isFirstTime && push(COMMUNITIES_URL)) ||
-            push('/fr/onboarding?step=1');
+          // (isFirstTime && push(COMMUNITIES_URL)) ||
+          //   push('/fr/onboarding?step=1');
+          push(COMMUNITIES_URL);
         }
       } catch (error: any) {
         console.log(`An error occured`, error);

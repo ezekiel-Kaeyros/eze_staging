@@ -188,3 +188,15 @@ jobs:
         run: docker build -t ezekielkaeyros/sso_staging ./sso/eze-auth0
       - name: Push SSO image
         run: docker push ezekielkaeyros/sso_staging:latest
+
+  build-and-push-library-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Build library image
+        run: docker build -t ezekielkaeyros/ezelibrary ./digital-library/frontend
+      - name: Push SSO image
+        run: docker push ezekielkaeyros/ezelibrary:latest

@@ -74,16 +74,14 @@ const NavBar: React.FC<NavBarProps> = ({ lang, navigation }) => {
           className="flex flex-col lg:flex-row space-y-3 lg:w-fit lg:space-y-0 lg:items-center  pt-2"
         >
           <li className="border-t-1 hover:text-primaryColor lg:border-none px-6 lg:px-3 2xl:px-6 pt-4 lg:pt-0 pb-2">
-              {token ? (
-                <Link href={`${COMMUNITIES_URL}`}>
-                  {navigation.comunity}
-                </Link>
-              ) : (
-                <Link href="#" onClick={handleLogin}>
-                  {navigation.comunity}
-                </Link>
-              )}
-            </li>
+            {token ? (
+              <Link href={`${COMMUNITIES_URL}`}>{navigation.comunity}</Link>
+            ) : (
+              <Link href="#" onClick={handleLogin}>
+                {navigation.comunity}
+              </Link>
+            )}
+          </li>
           <li className="border-t-1 hover:text-primaryColor lg:border-none px-6 lg:px-3 2xl:px-6  pt-4 lg:pt-0 pb-2">
             <Link href="https://learn.eze.wiki/"> {navigation.online}</Link>
           </li>
@@ -101,10 +99,7 @@ const NavBar: React.FC<NavBarProps> = ({ lang, navigation }) => {
           </li>
           <li className="border-t-1 hover:text-primaryColor lg:border-none px-6 lg:px-3 2xl:px-6  pt-4 lg:pt-0 pb-4">
             {token ? (
-              <Button
-                href={`https://communities.eze.wiki/`}
-                className="w-fit py-3"
-              >
+              <Button href={`${COMMUNITIES_URL}`} className="w-fit py-3">
                 {navigation.dash}
               </Button>
             ) : (

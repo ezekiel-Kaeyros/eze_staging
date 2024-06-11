@@ -68,13 +68,14 @@ router.post('/settings/create-user', checkIfSuperAdmin, SettingsController.creat
  */
 router.get('/channels', ChannelController.channels);
 router.get('/channels/:name', ChannelController.channelByName);
-router.post('/channels/create', checkIfAdmin, ChannelController.create);
+router.post('/channels/create', ChannelController.create);
 router.put('/channels/update', checkIfAdmin, ChannelController.update);
+router.put('/channels/update-member', ChannelController.updateMember);
 router.delete('/channels/delete', checkIfAdmin, ChannelController.delete);
 router.post('/channels/reorder', checkIfAdmin, ChannelController.reorder);
 router.post('/channels/join/:channelId', UserController.joinChannel);
 router.post('/channels/leave/:channelId', UserController.leaveChannel);
-router.post('/channels/upload-photo', [checkIfAdmin, multerUpload.single('image')], ChannelController.uploadPhoto);
+router.post('/channels/upload-photo', [ multerUpload.single('image')], ChannelController.uploadPhoto);
 
 /**
  * Posts
