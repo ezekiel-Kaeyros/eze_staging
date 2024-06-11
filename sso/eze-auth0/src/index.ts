@@ -25,10 +25,6 @@ app.use(session({ secret: 'your_secret_key', resave: false, saveUninitialized: t
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Database connection
-const MONGODB_URI: string = process.env.MONGODB_URI || 'mongodb+srv://eze:mongodb123@cluster0.dbnvshu.mongodb.net/eze_sso?retryWrites=true&w=majority&appName=Cluster0';
-mongoose.connect(MONGODB_URI);
-
 const connection= mongoose.connection;
 
 // Initialize passport
