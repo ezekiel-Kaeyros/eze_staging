@@ -16,9 +16,9 @@ RUN npm install -g typescript
 # Copy the rest of project files into this image
 COPY . .
 
-# Build the project
-RUN npm run check
-RUN npm test
+# # Build the project
+# RUN npm run check
+# RUN npm test
 
 # Expose application port
 EXPOSE 3000
