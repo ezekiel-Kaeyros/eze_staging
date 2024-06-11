@@ -1,7 +1,7 @@
 # Build Stage
 FROM node:18-alpine AS BUILD_IMAGE
 WORKDIR /app
-COPY package.json yarn.lock ./
+COPY package.json ./
 RUN yarn install
 RUN yarn add styled-components
 RUN yarn add react-i18next
