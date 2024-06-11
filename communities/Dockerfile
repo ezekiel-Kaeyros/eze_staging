@@ -1,17 +1,18 @@
 # Build Stage
-FROM node:18-alpine AS BUILD_IMAGE
+FROM node:20.11.1-alpine AS BUILD_IMAGE
 WORKDIR /app
 COPY package*.json ./
 RUN yarn install
 COPY . .
 WORKDIR /app/packages/frontend
-RUN  yarn add styled-components && yarn build
+RUN  yarn add styled-components 
+RUN  yarn build
 
 # Reset the working directory
 WORKDIR /app
 
 # Production Stage
-FROM node:18-alpine AS PRODUCTION_STAGE
+FROM node:20.11.1-alpine AS PRODUCTION_STAGE
 WORKDIR /app
 COPY --from=BUILD_IMAGE /app/package*.json ./
 COPY --from=BUILD_IMAGE /app/packages/frontend ./packages/frontend
