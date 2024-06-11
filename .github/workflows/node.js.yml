@@ -125,7 +125,7 @@ jobs:
       - name: Login to DockerHub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Build frontend Docker image
-        run: docker build -t ezekielkaeyros/frontend_eze_staging ./communities/packages/frontend
+        run: docker build -t ezekielkaeyros/frontend_eze_staging ./communities/packages
       - name: Push frontend Docker image
         run: docker push ezekielkaeyros/frontend_eze_staging:latest
 
