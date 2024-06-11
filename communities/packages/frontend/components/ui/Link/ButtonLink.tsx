@@ -29,7 +29,7 @@ const ButtonLink: FC<ButtonLinkProps> = ({
   hasHover,
 }) => {
   return (
-    <NextLink href={href}>
+    <a href={href}>
       <ButtonA
         weight={weight}
         size={size}
@@ -42,7 +42,7 @@ const ButtonLink: FC<ButtonLinkProps> = ({
       >
         {children}
       </ButtonA>
-    </NextLink>
+    </a>
   );
 };
 
