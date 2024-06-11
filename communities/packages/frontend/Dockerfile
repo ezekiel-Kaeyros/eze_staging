@@ -1,5 +1,5 @@
 # Build Stage
-FROM node:20.11.0-alpine AS BUILD_IMAGE
+FROM node:18-alpine AS BUILD_IMAGE
 WORKDIR /app
 COPY package*.json ./
 RUN yarn install
@@ -9,7 +9,7 @@ RUN yarn build
 
 
 # Production Stage
-FROM node:20.9.0-alpine AS PRODUCTION_STAGE
+FROM node:18-alpine AS PRODUCTION_STAGE
 WORKDIR /app
 COPY --from=BUILD_IMAGE /app/package*.json ./
 COPY --from=BUILD_IMAGE /app/.next ./.next
