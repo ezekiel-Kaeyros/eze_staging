@@ -2,6 +2,7 @@
 FROM node:18-alpine AS BUILD_IMAGE
 WORKDIR /app
 COPY package.json ./
+COPY next.config.js ./
 RUN yarn install
 RUN yarn add styled-components
 RUN yarn add react-i18next
