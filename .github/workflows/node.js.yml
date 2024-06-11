@@ -51,7 +51,7 @@ jobs:
         run: |
           cd landing-page && \
           touch .env && \
-          echo "REACT_APP_API_URL=https://backcommunities.eze.ink" > .env && \
+          echo "NEXT_API_PRODUCTION_URL=https://backcommunities.eze.ink" > .env && \
           echo 'NEXT_PUBLIC_COMMUNITIES_URL="https://communities.eze.ink/"' >> .env && \
           echo 'NEXT_PUBLIC_SSO_LOGIN_URL="https://sso.eze.ink/auth/login"' >> .env
       - name: Archive .env file
