@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://backcommunities.eze.ink';
+export const API_URL = 'https://backcommunities.eze.ink';
 // export const API_URL = 'http://localhost:4000';
 // export const API_URL = process.env.NEXT_API_PRODUCTION_URL;
 
