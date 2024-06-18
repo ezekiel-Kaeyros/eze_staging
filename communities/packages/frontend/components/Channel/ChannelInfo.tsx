@@ -36,6 +36,8 @@ import { RootState } from '../../store';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { AlertTypes, openAlert } from '../../store/alert';
 import { setAuthUser } from '../../store/auth';
+// import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+// import { GetStaticProps } from 'next';
 
 interface ChannelInfoProps {
   channelId: string;
@@ -231,7 +233,7 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ channelId, name, creationDate, desc
   
   return (
     <div style={{ position: 'relative' }}>
-      <CoverPhoto isLoading={isLoadingProfile} image={imageCover && imageCover}>
+      <CoverPhoto isLoading={isLoadingProfile} image={imageCover && imageCover }>
         {isLoadingProfile === ProfileLoading.CoverPicture && (
           <CoverLoading>
             <Loading />
@@ -240,15 +242,7 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ channelId, name, creationDate, desc
 
         {
           <CoverImageWrapper>
-         
-            {isJoined && (
-              <UploadChannelImage
-                isCover
-                setIsLoading={setIsLoadingProfile}
-                channel={isJoined}
-                imagehandler={setCoverHandler}
-              />
-            )}
+            {isJoined && <UploadChannelImage isCover setIsLoading={setIsLoadingProfile} channel={isJoined} imagehandler={setCoverHandler}/>}
           </CoverImageWrapper>
         }
         <ProfileDetails>
@@ -256,16 +250,10 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ channelId, name, creationDate, desc
             {isLoadingProfile === ProfileLoading.ChannelPicture ? (
               <Loading top="lg" />
             ) : (
-              <Avatar image={imageProfil && imageProfil} size={4} />
+              <Avatar image={imageProfil && imageProfil } size={4} />
             )}
             <ProfileImageWrapper>
-              {authUser.role !== 'Regular' && (
-                <UploadChannelImage
-                  setIsLoading={setIsLoadingProfile}
-                  channel={isJoined}
-                  imagehandler={setprofilHandler}
-                />
-              )}
+              {isJoined && <UploadChannelImage setIsLoading={setIsLoadingProfile} channel={isJoined} imagehandler={setprofilHandler}/>}
             </ProfileImageWrapper>
           </ProfilePhoto>
           <DetailsList>
@@ -326,5 +314,9 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ channelId, name, creationDate, desc
     </div>
   );
 };
-
+// export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+//   props: {
+//     ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+//   },
+// });
 export default ChannelInfo;

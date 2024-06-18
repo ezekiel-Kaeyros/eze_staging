@@ -15,15 +15,26 @@ import { url } from 'inspector';
 
 // const COMMUNITIES_URL = 'https://communities.eze.wiki/';
 const COMMUNITIES_URL: any = process.env.NEXT_PUBLIC_COMMUNITIES_URL;
-const config = {
-  headers: {
-    'content-type': 'application/json',
-  },
-};
+// const communities = [
+//   {
+//     id: 1,
+//     name: 'community',
+//     title: 'Health Sciences',
+//     value: 'Health Sciences',
+//     description:
+//       'Quantitative researchers on microbiology research. With discussion on advanced technique',
+//   },
+// };
 
 // Getting new info from user
 
 // Joining request
+
+const config = {
+  headers: {
+    'content-type': 'application/json',
+  }
+}
 const joinChannel = async ({ channelId, userId, url }: any) => {
   console.log('channelId', channelId);
   console.log('userId', userId);
@@ -58,7 +69,7 @@ const updateChannel = async (
   );
   return response;
 };
-// const COMMUNITIES_URL = 'https://communities.eze.ink/';
+// const COMMUNITIES_URL = 'https://communities.eze.wiki/';
 // const COMMUNITIES_URL = 'http://localhost:3001';
 // const communities = [
 //   {
@@ -165,7 +176,7 @@ const SecondStep = () => {
 
   const handleSend = async () => {
     // isFirstTime('true');
-    // push(COMMUNITIES_URL);
+     push(COMMUNITIES_URL);
     console.log(communities);
   };
   useEffect(() => {
@@ -212,49 +223,47 @@ const SecondStep = () => {
   };
 
   const handleJoin = async () => {
-      push(COMMUNITIES_URL);
+    if (communities && communities.length > 0) {
+      let row = 0;
+      communities.map(async (item) => {
+        const joiningDetails = {
+          userId: JSON.parse(user)?._id,
+          channelId: item._id,
+          url: API_URL,
+        };
+        try {
+          const response = await joinChannel(joiningDetails);
+          if (response.status == 200) {
+            const res = await updateChannel(
+              {
+                _id: item._id,
+                name: item.name,
+                authRequired: true,
+                description: item.description,
+                members: item.members ? item.members + 1 : 1,
+              },
+              API_URL
+            );
+            row = row + 1;
 
-    // if (communities && communities.length > 0) {
-    //   let row = 0;
-    //   communities.map(async (item) => {
-    //     const joiningDetails = {
-    //       userId: JSON.parse(user)?._id,
-    //       channelId: item._id,
-    //       url: API_URL,
-    //     };
-    //     try {
-    //       const response = await joinChannel(joiningDetails);
-    //       if (response.status == 200) {
-    //         const res = await updateChannel(
-    //           {
-    //             _id: item._id,
-    //             name: item.name,
-    //             authRequired: true,
-    //             description: item.description,
-    //             members: item.members ? item.members + 1 : 1,
-    //           },
-    //           API_URL
-    //         );
-    //         row = row + 1;
+            // const row = number ? number + 1 : 1;
+            setnumber(row);
+          }
+        } catch (error) {
+          console.log('error', error);
+            row = row + 1;
 
-    //         // const row = number ? number + 1 : 1;
-    //         setnumber(row);
-    //       }
-    //     } catch (error) {
-    //       console.log('error', error);
-    //         row = row + 1;
+          // const row = number ? number + 1 : 1;
+          // console.log(row);
 
-    //       // const row = number ? number + 1 : 1;
-    //       // console.log(row);
-
-    //        setnumber(row);
-    //     }
-    //   });
-    //   // row == communities.length && push(COMMUNITIES_URL);
-    //   // setnumber(row);
-    // } else {
-    //   setnumber(0);
-    // }
+           setnumber(row);
+        }
+      });
+      // row == communities.length && push(COMMUNITIES_URL);
+      // setnumber(row);
+    } else {
+      setnumber(0);
+    }
   };
   return (
     <form className="w-11/12" onSubmit={handleSubmit(onSubmit)}>
@@ -281,7 +290,7 @@ const SecondStep = () => {
       </div>
 
       <div className="mt-8 w-fit">
-        <Button onClick={handleJoin} type="submit" className="w-fit">
+        <Button onClick={handleSend} type="submit" className="w-fit">
           Continue
         </Button>
       </div>

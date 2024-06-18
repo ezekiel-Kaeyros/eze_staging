@@ -8,7 +8,7 @@ import { RootState } from '../../store';
 import axios from 'axios';
 import { UserRole } from '../../constants';
 
-const HOME_PAGE = 'https://eze.ink';
+const HOME_PAGE = 'https://eze.wiki';
 
 interface HeaderUserProps {
   closeDropDown: () => void;
@@ -25,8 +25,8 @@ const HeaderUser: FC<HeaderUserProps> = ({ closeDropDown, isUserDropdownOpen, au
   const logout = async () => {
     try {
       await axios.post('/logout');
-      cookies.remove(Cookies.Token, { domain: '.eze.ink' });
-      cookies.remove(Cookies.User_data, { domain: '.eze.ink' });
+      cookies.remove(Cookies.Token, { domain: '.eze.wiki' });
+      cookies.remove(Cookies.User_data, { domain: '.eze.wiki' });
       closeDropDown();
       window.location.href = HOME_PAGE;
     } catch (error) {

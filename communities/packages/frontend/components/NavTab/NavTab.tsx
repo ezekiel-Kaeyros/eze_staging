@@ -7,12 +7,13 @@ export interface NavTabProps {
   icon: ReactNode;
   link: string;
   isActive?: boolean;
+  all?:boolean
 }
 
 const NavTab: FC<NavTabProps> = ({ icon, link, isActive }) => {
   return (
-    <ButtonLink href={`/${link}`}>
-      <Root >
+    <ButtonLink href={`${link}`}>
+      <Root isActive={isActive}>
         {icon}
         {isActive && <Line />}
       </Root>

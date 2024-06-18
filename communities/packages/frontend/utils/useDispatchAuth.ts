@@ -6,8 +6,7 @@ import { useDispatch } from 'react-redux';
 import { setAuthUser } from '../store/auth';
 import { useRouter } from 'next/router';
 
-// const HOME_URL = 'https://eze.ink';
-const HOME_URL = 'https://eze.ink';
+const HOME_URL = 'https://eze.wiki';
 // const HOME_URL = 'http://localhost:3000'
 
 export const useDispatchAuth = () => {

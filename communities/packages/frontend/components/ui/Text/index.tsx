@@ -3,7 +3,6 @@ import { FontSize, FontWeight, GeneralColors } from '../../../theme';
 
 interface ErrorProps {
   size?: FontSize;
-  color?: GeneralColors;
 }
 
 export const Error = styled.div<ErrorProps>`
@@ -23,15 +22,15 @@ const getHeadingStyles = (defaultSize: FontSize) => css<GetHeadingStylesProps>`
   color: ${(p) => (p.color ? p.theme.colors.general[p.color] : p.theme.colors.general.text)};
 `;
 
-export const H1 = styled.h1<GetHeadingStylesProps>`
+export const H1 = styled.h1`
   ${getHeadingStyles('xl')};
 `;
 
-export const H2 = styled.h2<GetHeadingStylesProps>`
+export const H2 = styled.h2`
   ${getHeadingStyles('lg')};
 `;
 
-export const H3 = styled.h3<GetHeadingStylesProps>`
+export const H3 = styled.h3`
   ${getHeadingStyles('md')};
 `;
 
