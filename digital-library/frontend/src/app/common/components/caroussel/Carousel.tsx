@@ -99,39 +99,25 @@ const Carousel: React.FC<{
   return (
     <div className="w-full ">
       <Slider {...settings}>
-        {arrayDoc.length > 0
-          ? array.map((item) => (
-              <div className="px-2">
-                {/* <CardDocument
+        {arrayDoc.map((item) => (
+          <div className="px-2">
+            {/* <CardDocument
               number={item.num}
               saveDoc={item.save}
               img={item.img}
             /> */}
-                <NewCardDocument
-                  imgCover={item.url && item.url}
-                  description={item.description}
-                  title={item.name}
-                  categorie={item.type}
-                  id={item.id}
-                  // saveDoc={item.save}
-                  // img={item.img}
-                />
-              </div>
-            ))
-          : array?.map((item) => (
-              <div className="px-2">
-                {/* <CardDocument
-              number={item.num}
-              saveDoc={item.save}
-              img={item.img}
-            /> */}
-                <NewCardDocument
-                  number={item.num && item.num}
-                  saveDoc={item.save}
-                  // img={item.img}
-                />
-              </div>
-            ))}
+            <NewCardDocument
+              imgCover={item.url && item.url}
+              description={item.description}
+              title={item.name}
+              categorie={item.type}
+              id={item.id}
+            // saveDoc={item.save}
+            // img={item.img}
+            />
+          </div>
+        ))}
+          
       </Slider>
     </div>
   );

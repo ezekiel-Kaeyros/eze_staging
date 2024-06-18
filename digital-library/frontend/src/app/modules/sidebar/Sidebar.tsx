@@ -77,7 +77,7 @@ const Sidebar: FC<SidebarProps> = ({ lang, sidebar }) => {
           </div>
         </Link>
         <Link
-          href={"digital-library"}
+          href={"/digital-library"}
           className={`w-full md:p-2 ${
             pathName.includes("digital-library") && "bg-[#daeeda]"
           }`}
@@ -89,7 +89,7 @@ const Sidebar: FC<SidebarProps> = ({ lang, sidebar }) => {
           </div>
         </Link>
         <Link
-          href={"settings"}
+          href={"/settings"}
           className={`w-full md:p-2 ${
             pathName.includes("setting") && "bg-[#daeeda]"
           }`}
@@ -100,7 +100,7 @@ const Sidebar: FC<SidebarProps> = ({ lang, sidebar }) => {
           </div>
         </Link>
         <Link
-          href={"add-document"}
+          href={"/add-document"}
           className={`w-full md:p-2 mt-14 flex items-center gap-2 ${
             pathName.includes("add-document") && "bg-[#daeeda]"
           }`}

@@ -49,6 +49,7 @@ router.get('/users/online-users', withUser, UserController.onlineUsers);
 router.get('/users/new-members', withUser, UserController.newMembers);
 router.post('/users/upload-photo', [checkIfUser, multerUpload.single('image')], UserController.uploadPhoto);
 router.get('/users/:id', UserController.user);
+router.get('/users/email/:email', UserController.userEmail);
 router.delete('/users/ban-user', checkIfSuperAdmin, UserController.banUser);
 
 /**

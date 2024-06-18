@@ -10,8 +10,11 @@ import Link from "next/link";
 import { useAddDocument } from "@/app/hooks/useAddDocument";
 import { url } from "inspector";
 import { URL } from "url";
+import { idHandler } from "@/redux/features/addDocument-slice";
+import { useRouter } from "next/navigation";
 const home = () => {
-  const{arrayDoc }=useAddDocument()
+  const { arrayDoc, dispatch } = useAddDocument()
+  const{push}= useRouter()
   const arraytest = [
     { num: 3, save: true },
 
@@ -66,8 +69,15 @@ const home = () => {
         </Link>
 
         {arrayDoc.length > 0 &&
-          arrayDoc.map((item,index) => (
-            <div key={index} className="lg:w-56 lg:h-56 w-48 h-48 bg-[#B0D0C7] pt-3 px-2 pb-1 rounded-xl  flex flex-col ">
+          arrayDoc.map((item, index) => (
+            <div
+              key={index}
+              className="lg:w-56 lg:h-56 w-48 h-48 bg-[#B0D0C7] pt-3 px-2 pb-1 rounded-xl  flex flex-col cursor-pointer"
+              onClick={() => {
+                item.id && dispatch(idHandler(item.id));
+                push("/view-document");
+              }}
+            >
               <p className="truncate">{item.name}</p>
 
               <div className="w-full flex-grow mb-1 border  flex justify-center items-center  overflow-hidden mt-2">

@@ -38,7 +38,7 @@ const NewCardDocument: React.FC<{
             alt=""
             width={192}
             height={192}
-            className="w-48 h-48 -mt-12 object-contain"
+            className="w-48 h-48 -mt-12 object-cover"
           />
 
           <p className="lg:text-base sm:text-sm text-xs px-3 py-2 bg-[#47586E] font-semibold text-white rounded-tl-full rounded-bl-full rounded-tr-full">

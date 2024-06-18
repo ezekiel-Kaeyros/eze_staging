@@ -13,9 +13,11 @@ export interface NavTabProps {
 const NavTab: FC<NavTabProps> = ({ icon, link, isActive }) => {
   return (
     <ButtonLink href={`${link}`}>
-      <Root isActive={isActive}>
-        {icon}
-        {isActive && <Line />}
+      <Root>
+        <>
+          {icon}
+          {isActive && <Line />}
+        </>
       </Root>
     </ButtonLink>
   );

@@ -233,7 +233,7 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ channelId, name, creationDate, desc
   
   return (
     <div style={{ position: 'relative' }}>
-      <CoverPhoto isLoading={isLoadingProfile} image={imageCover && imageCover }>
+      <CoverPhoto isLoading={isLoadingProfile} image={imageCover && imageCover}>
         {isLoadingProfile === ProfileLoading.CoverPicture && (
           <CoverLoading>
             <Loading />
@@ -242,7 +242,14 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ channelId, name, creationDate, desc
 
         {
           <CoverImageWrapper>
-            {isJoined && <UploadChannelImage isCover setIsLoading={setIsLoadingProfile} channel={isJoined} imagehandler={setCoverHandler}/>}
+            {isJoined && (
+              <UploadChannelImage
+                isCover
+                setIsLoading={setIsLoadingProfile}
+                channel={isJoined}
+                imagehandler={setCoverHandler}
+              />
+            )}
           </CoverImageWrapper>
         }
         <ProfileDetails>
@@ -250,15 +257,22 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ channelId, name, creationDate, desc
             {isLoadingProfile === ProfileLoading.ChannelPicture ? (
               <Loading top="lg" />
             ) : (
-              <Avatar image={imageProfil && imageProfil } size={4} />
+              <Avatar image={imageProfil && imageProfil} size={4} />
             )}
             <ProfileImageWrapper>
-              {isJoined && <UploadChannelImage setIsLoading={setIsLoadingProfile} channel={isJoined} imagehandler={setprofilHandler}/>}
+              {isJoined && (
+                <UploadChannelImage
+                  setIsLoading={setIsLoadingProfile}
+                  channel={isJoined}
+                  imagehandler={setprofilHandler}
+                />
+              )}
             </ProfileImageWrapper>
           </ProfilePhoto>
           <DetailsList>
             <DetailsText>
-              <H1 size="xl">{name}</H1>
+              {/* <H1 size="xl">{name}</H1> */}
+              <h1>{name}</h1>
               <DecriptionText>{description}</DecriptionText>
             </DetailsText>
             <DetailsInfo>

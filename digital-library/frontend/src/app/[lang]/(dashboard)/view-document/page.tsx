@@ -8,7 +8,7 @@ import cover2 from "../../../../../public/images/overview.svg";
 // import pdfFile from ""
 import { Document, Page, pdfjs } from "react-pdf";
 import { useState } from "react";
-// import PdfViewer from "@/app/common/components/pdf-viewer/PdfViewer";
+import PdfViewer from "@/app/common/components/pdf-viewer/PdfViewer";
   const arraytest = [
     { num: 3, save: true },
 
@@ -52,7 +52,7 @@ const ViewDocument = () => {
     <div className="w-full h-full pt-5">
       {doc.length > 0 && (
         <div className="w-full px-2 md:h-[50vh] grid md:grid-cols-2 gap-5">
-          <div className="overflow-auto h-full w-full no-scrollbar">
+          <div className=" overflow-auto h-full w-full no-scrollbar">
             <Image
               src={doc[0].url!}
               height={30}
@@ -79,8 +79,19 @@ const ViewDocument = () => {
                 ))}
               </div>
             </div> */}
-            <iframe src={doc[0].urlFile} className="w-full h-full"></iframe>
-            {/* { doc[0].file?.name.split(".").pop()?.toLocaleLowerCase()=='pdf' && <PdfViewer pdfUrl={doc[0].urlFile!} />} */}
+            {doc[0].file?.name.split(".").pop()?.toLocaleLowerCase() ==
+              "pdf" ? (
+              <iframe src={doc[0].urlFile} className="w-full h-full"></iframe>
+            ) : <div className="w-full h-full flex items-center justify-center bg-black text-white">
+                no preview available for {doc[0].file?.name.split(".").pop()} file
+              </div>}
+            {/* {doc[0].file?.name.split(".").pop()?.toLocaleLowerCase() !=
+              "pdf" && (
+              <div className="w-full h-full flex items-center justify-center">
+                no preview available for {doc[0].file?.name.split(".").pop()} file
+              </div>
+            )} */}
+            {/* { doc[0].file?.name.split(".").pop()?.toLocaleLowerCase()=='pdf' && <PdfViewer pdfUrl={doc[0].urlFile!} />}  */}
           </div>
           <div className="w-full h-full bg-white flex flex-col justify-between overflow-y-auto overflow-x-hidden  ">
             <p className="flex justify-between  ">

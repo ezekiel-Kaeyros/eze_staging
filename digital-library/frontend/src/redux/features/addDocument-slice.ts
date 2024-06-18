@@ -1,6 +1,26 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 
+  // const arraytest = [
+  //   { num: 3, save: true },
 
+  //   { num: 2, save: false, img: cover2 },
+
+  //   { num: 2, save: false },
+  //   { num: 3, save: false },
+  //   { num: 2, save: true },
+  //   { num: 2, save: false },
+  //   { num: 2, save: false, img: cover2 },
+
+  //   { num: 1, save: true },
+
+  //   { num: 2, save: false },
+
+  //   { num: 2, save: false, img: cover2 },
+
+  //   { num: 7, save: true },
+
+  //   { num: 2, save: false },
+  // ];
 // Just a boiler plate, this file needs to be updated
 export type Step1T = {
   categorie: string;
@@ -86,9 +106,12 @@ export const addDocument = createSlice({
           ...state.step2,
           confidentiality: action.payload,
           ...state.step3,
-          id:(state.arrayDocs.length+1).toString()
+          id: (state.arrayDocs.length + 1).toString(),
+          num: 0,
+          save: false,
         },
       ];
+      
     //   state.step4 = action.payload;
       (state.step1 = { categorie: "", type: "" }),
         (state.step2 = {
